@@ -6,6 +6,20 @@ import { Badge } from "@/components/ui/badge";
 import { FileText, Users, Pill, ChevronRight } from "lucide-react";
 import MedicationSummary from "./MedicationSummary";
 
+// type PatientItem = {
+//   name: string;
+//   type: string;
+// };
+//
+// type Feature = {
+//   id: "referral" | "visit-notes" | "medication";
+//   title: string;
+//   description: string;
+//   icon: any;
+//   bgClass: string;
+//   iconClass: string;
+// };
+
 // Mock data - replace with FastAPI integration
 const mockItems = [
   { id: 1, name: "Patient #1001 - John Smith", type: "Primary Care" },
