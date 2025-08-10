@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useMemo, useState, useEffect} from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -6,72 +6,58 @@ import { Badge } from "@/components/ui/badge";
 import { FileText, Users, Pill, ChevronRight } from "lucide-react";
 import MedicationSummary from "./MedicationSummary";
 
-// type PatientItem = {
-//   name: string;
-//   type: string;
-// };
-//
-// type Feature = {
-//   id: "referral" | "visit-notes" | "medication";
-//   title: string;
-//   description: string;
-//   icon: any;
-//   bgClass: string;
-//   iconClass: string;
-// };
-
-// Mock data - replace with FastAPI integration
-const mockItems = [
-  { id: 1, name: "Patient #1001 - John Smith", type: "Primary Care" },
-  { id: 2, name: "Patient #1002 - Sarah Johnson", type: "Cardiology" },
-  { id: 3, name: "Patient #1003 - Michael Brown", type: "Dermatology" },
-  { id: 4, name: "Patient #1004 - Lisa Davis", type: "Orthopedics" },
-];
+type PatientItem = {
+  patient_id: string;
+  name: string;
+  type: string;
+}
 
 const Dashboard = () => {
-  const [selectedItem, setSelectedItem] = useState<string>("");
+  const [items, setItems] = useState<PatientItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+  const [selectedItem, setSelectedItem] = useState<string>(""); // stores patient_id
   const [activeFeature, setActiveFeature] = useState<string>("");
 
-  const selectedItemData = mockItems.find(item => item.id.toString() === selectedItem);
+  // Load from backend
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const base = import.meta.env.VITE_API_BASE_URL || "http://localhost:8888";
+        const res = await fetch(`${base}/patients`);
+        if (!res.ok) throw new Error(`Failed to load patients (${res.status})`);
+        const data = await res.json();
+        setItems(Array.isArray(data?.patients) ? data.patients : []);
+      } catch (e) {
+        setError(e.message || "Failed to load patients");
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  const selectedItemData = useMemo(
+    () => items.find(item => item.patient_id === selectedItem),
+    [items, selectedItem]
+  );
 
   const features = [
-    {
-      id: "referral",
-      title: "Referral Generation",
-      description: "Generate and manage patient referrals",
-      icon: Users,
-      color: "primary",
-    },
-    {
-      id: "visit-notes",
-      title: "Visit Note Summary",
-      description: "Summarize and review visit notes",
-      icon: FileText,
-      color: "secondary",
-    },
-    {
-      id: "medication",
-      title: "Medication Summary",
-      description: "Review and edit medication summaries",
-      icon: Pill,
-      color: "accent",
-    },
+    { id: "referral", title: "Referral Generation", description: "Generate and manage patient referrals", icon: Users, color: "primary" },
+    { id: "visit-notes", title: "Visit Note Summary", description: "Summarize and review visit notes", icon: FileText, color: "secondary" },
+    { id: "medication", title: "Medication Summary", description: "Review and edit medication summaries", icon: Pill, color: "accent" },
   ];
 
-  const handleFeatureClick = (featureId: string) => {
-    setActiveFeature(featureId);
-  };
+  const handleFeatureClick = (featureId: string) => setActiveFeature(featureId);
 
   if (activeFeature === "medication" && selectedItemData) {
     return (
       <div className="min-h-screen bg-background p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
-            <Button 
-              variant="ghost" 
-              onClick={() => setActiveFeature("")}
-              className="mb-4"
-            >
+            <Button variant="ghost" onClick={() => setActiveFeature("")} className="mb-4">
               ← Back to Dashboard
             </Button>
             <h1 className="text-3xl font-bold text-foreground">Medication Summary</h1>
@@ -79,6 +65,7 @@ const Dashboard = () => {
               Review and edit medication summary for {selectedItemData.name}
             </p>
           </div>
+          {/* Pass patient_id so MedicationSummary can call /patients/{patient_id}/medication-summary */}
           <MedicationSummary itemData={selectedItemData} />
         </div>
       </div>
@@ -104,23 +91,27 @@ const Dashboard = () => {
             <CardTitle className="text-xl">Select Patient</CardTitle>
           </CardHeader>
           <CardContent>
-            <Select value={selectedItem} onValueChange={setSelectedItem}>
-              <SelectTrigger className="w-full max-w-md">
-                <SelectValue placeholder="Choose a patient..." />
-              </SelectTrigger>
-              <SelectContent>
-                {mockItems.map((item) => (
-                  <SelectItem key={item.id} value={item.id.toString()}>
-                    <div className="flex items-center justify-between w-full">
-                      <span>{item.name}</span>
-                      <Badge variant="secondary" className="ml-2">
-                        {item.type}
-                      </Badge>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {loading && <p className="text-sm text-muted-foreground">Loading patients…</p>}
+            {error && <p className="text-sm text-destructive">Error: {error}</p>}
+            {!loading && !error && (
+              <Select value={selectedItem} onValueChange={setSelectedItem}>
+                <SelectTrigger className="w-full max-w-md">
+                  <SelectValue placeholder="Choose a patient..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {items.map((item) => (
+                    <SelectItem key={item.patient_id} value={item.patient_id}>
+                      <div className="flex items-center justify-between w-full">
+                        <span>{item.name}</span>
+                        <Badge variant="secondary" className="ml-2">
+                          {item.type}
+                        </Badge>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </CardContent>
         </Card>
 
@@ -128,17 +119,14 @@ const Dashboard = () => {
         {selectedItem && (
           <div className="space-y-6">
             <div className="flex items-center gap-2 mb-4">
-              <h2 className="text-2xl font-semibold text-foreground">
-                Available Features
-              </h2>
-              <Badge variant="outline">
-                {selectedItemData?.name}
-              </Badge>
+              <h2 className="text-2xl font-semibold text-foreground">Available Features</h2>
+              <Badge variant="outline">{selectedItemData?.name}</Badge>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {features.map((feature) => {
                 const Icon = feature.icon;
+                // Note: dynamic Tailwind classes like bg-${feature.color} need safelisting in tailwind.config if you care about colors here
                 return (
                   <Card
                     key={feature.id}
@@ -147,24 +135,21 @@ const Dashboard = () => {
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
-                        <div className={`p-3 rounded-lg bg-${feature.color}/10`}>
-                          <Icon className={`h-6 w-6 text-${feature.color}`} />
+                        <div className="p-3 rounded-lg bg-primary/10"> {/* keep static to avoid purging */}
+                          <Icon className="h-6 w-6 text-primary" />
                         </div>
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <CardTitle className="text-lg">{feature.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground text-sm">
-                        {feature.description}
-                      </p>
+                      <p className="text-muted-foreground text-sm">{feature.description}</p>
                     </CardContent>
                   </Card>
                 );
               })}
             </div>
 
-            {/* Feature Content Area */}
             {activeFeature && activeFeature !== "medication" && (
               <Card className="mt-8 shadow-medium">
                 <CardHeader>
@@ -175,11 +160,11 @@ const Dashboard = () => {
                 <CardContent>
                   <div className="text-center py-12">
                     <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    {(() => {
-                      const feature = features.find(f => f.id === activeFeature);
-                      const Icon = feature?.icon;
-                      return Icon && <Icon className="h-8 w-8 text-primary" />;
-                    })()}
+                      {(() => {
+                        const feature = features.find(f => f.id === activeFeature);
+                        const Icon = feature?.icon;
+                        return Icon && <Icon className="h-8 w-8 text-primary" />;
+                      })()}
                     </div>
                     <h3 className="text-lg font-semibold mb-2">Feature Coming Soon</h3>
                     <p className="text-muted-foreground">
@@ -192,7 +177,6 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Empty State */}
         {!selectedItem && (
           <div className="text-center py-16">
             <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
