@@ -16,7 +16,7 @@ const Dashboard = () => {
   const [items, setItems] = useState<PatientItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const [selectedItem, setSelectedItem] = useState<string>(""); // stores patient_id
+  const [selectedItem, setSelectedItem] = useState<string>(""); // stores id
   const [activeFeature, setActiveFeature] = useState<string>("");
 
   // Load from backend
@@ -65,7 +65,7 @@ const Dashboard = () => {
               Review and edit medication summary for {selectedItemData.name}
             </p>
           </div>
-          {/* Pass patient_id so MedicationSummary can call /patients/{patient_id}/medication-summary */}
+          {/* Pass id so MedicationSummary can call /patients/{id}/medication-summary */}
           <MedicationSummary itemData={selectedItemData} />
         </div>
       </div>
