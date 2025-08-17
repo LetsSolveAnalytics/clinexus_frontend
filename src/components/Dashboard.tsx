@@ -31,13 +31,15 @@ function numIdFromString(s: string): number {
 }
 
 type PatientItem = {
-  patient_id: string;
+  patient_id: string;  // MRN
   name: string;
   type: string;
   diagnosis: string;
 };
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const [items, setItems] = useState<PatientItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, Send, Zap } from "lucide-react";
 import { useState } from "react";
+=======
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { MessageCircle, Send, Zap } from "lucide-react";
+>>>>>>> 908db29bcbdec178821c0dc49b501b6418e59379
 
 interface QuickAccessProps {
   patientData: {
