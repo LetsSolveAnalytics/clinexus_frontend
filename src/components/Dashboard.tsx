@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/command";
 import { ChevronRight, FileText, Pill, Users } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MedicationSummary from "./MedicationSummary";
 import QuickAccess from "./QuickAccess";
 import ReferralGeneration from "./ReferralGeneration";
