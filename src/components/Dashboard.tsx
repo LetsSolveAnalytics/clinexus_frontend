@@ -1,6 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { FileText, Users, Pill, ChevronRight } from "lucide-react";
+import QuickAccess from "./QuickAccess";
 import {
   CommandDialog,
   CommandEmpty,
@@ -9,13 +13,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { ChevronRight, FileText, Pill, Users } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import MedicationSummary from "./MedicationSummary";
-import QuickAccess from "./QuickAccess";
-import ReferralGeneration from "./ReferralGeneration";
-import VisitSummary from "./VisitSummary";
 
 // ---- optional: make an opaque slug for MRN (kept from earlier steps) ----
 function fnv1a32(str: string): number { let h=0x811c9dc5; for (let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=(h+((h<<1)+(h<<4)+(h<<7)+(h<<8)+(h<<24)))>>>0; } return h>>>0; }
@@ -35,123 +32,96 @@ type PatientItem = {
   patient_id: string;  // MRN
   name: string;
   type: string;
-  diagnosis: string;
+  diagnosis?: string; // optional; used in UI
 };
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   const [items, setItems] = useState<PatientItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [selectedItem, setSelectedItem] = useState<PatientItem | null>(null);
-  const [activeFeature, setActiveFeature] = useState("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+  const [selectedItem, setSelectedItem] = useState<string>(""); // MRN
   const [open, setOpen] = useState(false);
 
-  // Load patients
+  // Load from backend
   useEffect(() => {
-    const loadPatients = async () => {
+    const load = async () => {
       try {
         setLoading(true);
         setError("");
-        const res = await fetch("/datafold/data1.json");
+        const base =
+          (import.meta as any)?.env?.VITE_API_BASE_URL ||
+          (import.meta as any)?.env?.NEXT_PUBLIC_API_BASE ||
+          "http://localhost:8888";
+
+        const res = await fetch(`${base}/patients`, { headers: { Accept: "application/json" } });
         if (!res.ok) throw new Error(`Failed to load patients (${res.status})`);
         const data = await res.json();
-        setItems(Array.isArray(data) ? data : []);
+        const arr = Array.isArray(data?.patients) ? (data.patients as PatientItem[]) : [];
+        setItems(arr);
       } catch (e: any) {
         setError(e.message || "Failed to load patients");
+        setItems([]); // keep items as array to avoid type issues in render
       } finally {
         setLoading(false);
       }
     };
-    loadPatients();
+    load();
   }, []);
 
   const selectedItemData = useMemo(
-    () => items.find((item) => item.patient_id === selectedItem?.patient_id),
+    () => items.find(item => item.patient_id === selectedItem),
     [items, selectedItem]
   );
 
   const features = [
-    {
-      id: "referral",
-      title: "Referral Generation",
-      description: "Generate and manage patient referrals",
-      icon: Users,
-    },
-    {
-      id: "visit-notes",
-      title: "Visit Note Summary",
-      description: "Summarize and review visit notes",
-      icon: FileText,
-    },
-    {
-      id: "medication",
-      title: "Medication Summary",
-      description: "Review and edit medication summaries",
-      icon: Pill,
-    },
+    { id: "referral", title: "Referral Generation", description: "Generate and manage patient referrals", icon: Users },
+    { id: "visit-notes", title: "Visit Note Summary", description: "Summarize and review visit notes", icon: FileText },
+    { id: "medication", title: "Medication Summary", description: "Review and edit medication summaries", icon: Pill },
   ];
 
-  // Feature handlers
-  const handleFeatureClick = (id: string) => {
-    setActiveFeature(id);
+  const handleFeatureClick = (featureId: string) => {
+    if (featureId === "medication") {
+      if (!selectedItemData) {
+        alert("Please select a patient first.");
+        return;
+      }
+      const slug = slugForMrn(selectedItemData.patient_id);
+      navigate(`/patients/${slug}/medication_summary`);
+      return;
+    }
+    if (featureId === "visit-notes") {
+      if (!selectedItemData) {
+        alert("Please select a patient first.");
+        return;
+      }
+      const slug = slugForMrn(selectedItemData.patient_id);
+      navigate(`/patients/${slug}/visit_summary`, {
+        state: { patient: selectedItemData }, // { patient_id, name, type }
+      });
+      return;
+    }
+    if (featureId === "referral") {
+      if (!selectedItemData) {
+        alert("Please select a patient first.");
+        return;
+      }
+      const slug = slugForMrn(selectedItemData.patient_id);
+      navigate(`/patients/${slug}/referral`, {
+        state: { patient: selectedItemData }, // { patient_id, name, type }
+      });
+      return;
+    }
+    alert("Feature coming soon.");
   };
-
-  // Conditional rendering for features
-  if (activeFeature === "referral" && selectedItemData) {
-    return (
-      <ReferralGeneration
-        patient={selectedItemData}
-        onBack={() => setActiveFeature("")}
-      />
-    );
-  }
-if (activeFeature === "visit-notes" && selectedItemData) {
-  return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
-        <Button
-          variant="ghost"
-          onClick={() => setActiveFeature("")}
-          className="mb-4"
-        >
-          ← Back to Dashboard
-        </Button>
-        <h1 className="text-3xl font-bold">Visit Summary</h1>
-        <VisitSummary patient={selectedItemData} />
-      </div>
-    </div>
-  );
-}
-  if (activeFeature === "medication" && selectedItemData) {
-    return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-7xl mx-auto">
-          <Button
-            variant="ghost"
-            onClick={() => setActiveFeature("")}
-            className="mb-4"
-          >
-            ← Back to Dashboard
-          </Button>
-          <h1 className="text-3xl font-bold">Medication Summary</h1>
-          <p className="text-muted-foreground mt-2">
-            Review and edit medication summary for {selectedItemData.name}
-          </p>
-          <MedicationSummary itemData={selectedItemData} />
-        </div>
-      </div>
-    );
-  }
-
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b bg-card shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <h1 className="text-3xl font-bold">Healthcare Dashboard</h1>
+          <h1 className="text-3xl font-bold text-foreground">Healthcare Dashboard</h1>
           <p className="text-muted-foreground mt-2">
             Select a patient and choose a feature to get started
           </p>
@@ -160,7 +130,7 @@ if (activeFeature === "visit-notes" && selectedItemData) {
 
       <div className="max-w-7xl mx-auto p-6">
         {/* Patient Selection */}
-        <Card className="mb-8">
+        <Card className="mb-8 shadow-soft border-border/50">
           <CardHeader>
             <CardTitle className="text-xl">Select Patient</CardTitle>
           </CardHeader>
@@ -174,7 +144,7 @@ if (activeFeature === "visit-notes" && selectedItemData) {
                 <Button
                   variant="outline"
                   onClick={() => setOpen(true)}
-                  className="w-full max-w-md  bg-blue-500 text-white hover:bg-blue-600"
+                  className="w-full max-w-md bg-blue-500 text-white hover:bg-blue-600"
                 >
                   Choose a patient...
                 </Button>
@@ -188,11 +158,11 @@ if (activeFeature === "visit-notes" && selectedItemData) {
                         <CommandItem
                           key={item.patient_id}
                           onSelect={() => {
-                            setSelectedItem(item);
+                            setSelectedItem(item.patient_id); // ✅ select MRN, do NOT mutate items
                             setOpen(false);
                           }}
                         >
-                          {item.name}
+                          <span>{item.name}</span>
                           <Badge variant="secondary" className="ml-2">
                             {item.type}
                           </Badge>
@@ -202,24 +172,24 @@ if (activeFeature === "visit-notes" && selectedItemData) {
                   </CommandList>
                 </CommandDialog>
 
-                {selectedItem && (
+                {selectedItemData && (
                   <div className="mt-4 p-4 border rounded bg-blue-50 flex flex-wrap gap-4">
                     <div className="flex-1 min-w-[120px]">
                       <p className="text-sm text-primary">ID</p>
-                      <p className="font-medium">{selectedItem.patient_id}</p>
+                      <p className="font-medium">{selectedItemData.patient_id}</p>
                     </div>
                     <div className="flex-1 min-w-[120px]">
                       <p className="text-sm text-primary">Name</p>
-                      <p className="font-medium">{selectedItem.name}</p>
+                      <p className="font-medium">{selectedItemData.name}</p>
                     </div>
                     <div className="flex-1 min-w-[120px]">
                       <p className="text-sm text-primary">Type</p>
-                      <p className="font-medium">{selectedItem.type}</p>
+                      <p className="font-medium">{selectedItemData.type}</p>
                     </div>
-                    {selectedItem.diagnosis && (
+                    {selectedItemData.diagnosis && (
                       <div className="flex-1 min-w-[120px]">
                         <p className="text-sm text-primary">Diagnosis</p>
-                        <p className="font-medium">{selectedItem.diagnosis}</p>
+                        <p className="font-medium">{selectedItemData.diagnosis}</p>
                       </div>
                     )}
                   </div>
@@ -229,19 +199,24 @@ if (activeFeature === "visit-notes" && selectedItemData) {
           </CardContent>
         </Card>
 
-        {/* Feature Cards */}
-     {selectedItem && selectedItemData && (
-  <div className="space-y-8">
-    {/* Quick Access */}
-    <div>
-      <QuickAccess
-        patientData={{
-          id: numIdFromString(selectedItemData.patient_id), // stable numeric id
-          name: selectedItemData.name,
-          type: selectedItemData.type,
-        }}
-      />
-    </div>
+        {/* Feature Cards + Quick Access */}
+        {selectedItemData ? (
+          <div className="space-y-8">
+            {/* Quick Access */}
+            <div>
+              <QuickAccess
+                patientData={{
+                  id: numIdFromString(selectedItemData.patient_id), // stable numeric id from MRN
+                  name: selectedItemData.name,
+                  type: selectedItemData.type,
+                }}
+              />
+            </div>
+
+            <div className="flex items-center gap-2 mb-2">
+              <h2 className="text-2xl font-semibold text-foreground">Available Features</h2>
+              <Badge variant="outline">{selectedItemData.name}</Badge>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {features.map((feature) => {
@@ -249,7 +224,7 @@ if (activeFeature === "visit-notes" && selectedItemData) {
                 return (
                   <Card
                     key={feature.id}
-                    className="cursor-pointer hover:shadow-md transition"
+                    className="cursor-pointer transition-all duration-300 hover:shadow-medium hover:-translate-y-1 border-border/50 bg-gradient-to-br from-card to-background"
                     onClick={() => handleFeatureClick(feature.id)}
                   >
                     <CardHeader className="pb-3">
@@ -262,61 +237,22 @@ if (activeFeature === "visit-notes" && selectedItemData) {
                       <CardTitle className="text-lg">{feature.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground">
-                        {feature.description}
-                      </p>
+                      <p className="text-muted-foreground text-sm">{feature.description}</p>
                     </CardContent>
                   </Card>
                 );
               })}
             </div>
-
-            {/* Placeholder for not-yet-implemented features */}
-            {activeFeature &&
-              activeFeature !== "referral" &&
-              activeFeature !== "medication" && (
-                <Card className="mt-8">
-                  <CardHeader>
-                    <CardTitle>
-                      {features.find((f) => f.id === activeFeature)?.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        {(() => {
-                          const feature = features.find(
-                            (f) => f.id === activeFeature
-                          );
-                          const Icon = feature?.icon;
-                          return Icon && <Icon className="h-8 w-8 text-primary" />;
-                        })()}
-                      </div>
-                      <h3 className="text-lg font-semibold mb-2">
-                        Feature Coming Soon
-                      </h3>
-                      <p className="text-muted-foreground">
-                        This feature will be integrated with your FastAPI
-                        backend.
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
           </div>
-        )}
-
-        {!selectedItem && (
+        ) : (
           <div className="text-center py-16">
             <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <FileText className="h-10 w-10 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">
-              Welcome to Healthcare Dashboard
-            </h3>
+            <h3 className="text-xl font-semibold mb-2">Welcome to Healthcare Dashboard</h3>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Please select a patient from the dropdown above to access the
-              available features and start managing their healthcare data.
+              Please select a patient from the dropdown above to access the available features
+              and start managing their healthcare data.
             </p>
           </div>
         )}

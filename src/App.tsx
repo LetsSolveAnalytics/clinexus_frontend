@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Dashboard from "@/components/Dashboard.tsx";
 import MedicationSummary from "@/components/MedicationSummary.tsx";
+import VisitSummary from "@/components/VisitSummary.tsx";
+import ReferralGeneration from "@/components/ReferralGeneration.tsx";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +22,8 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="/" element={<Dashboard />} />
           <Route path="/patients/:slug/medication_summary" element={<MedicationSummary />} />
+          <Route path="/patients/:slug/visit_summary" element={<VisitSummary />} />
+          <Route path="/patients/:slug/referral" element={<ReferralGeneration />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
