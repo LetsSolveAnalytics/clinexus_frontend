@@ -166,7 +166,34 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+      </div>{!selectedItem && (
+  <div className="relative flex flex-col items-center justify-center py-24 px-4">
+
+
+    {/* Soft Gradient Background */}
+    <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/60 to-indigo-100/40" />
+
+    <Card className="glass-card px-10 py-14 rounded-3xl shadow-xl relative">
+      <div className="w-24 h-24 bg-primary/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-md">
+        <FileText className="h-12 w-12 text-primary" />
       </div>
+
+      <h3 className="text-2xl font-bold text-center mb-3 text-gray-800">
+        Welcome to Clinexus Dashboard
+      </h3>
+
+      <p className="text-muted-foreground text-center max-w-sm mx-auto">
+        Select a patient from the panel above to generate referrals, visit summaries, and medication overviews.
+      </p>
+
+      <p className="mt-4 text-sm text-primary font-medium text-center animate-pulse">
+        Waiting for patient selection...
+      </p>
+    </Card>
+
+  </div>
+)}
+
     </div>
   );
 };
