@@ -1,0 +1,410 @@
+{
+  "patient": {
+    "name": "Belen Shirely Anderson",
+    "age": 62,
+    "sex": "female",
+    "mrn": "f4e9b2c8-9db5-5597-a6a7-1215a638c1e2",
+    "source_id": "Patient/f4e9b2c8-9db5-5597-a6a7-1215a638c1e2",
+    "clinic": "Fitchburg Outpatient Clinic",
+    "latest_provider": "Dr. Ted Reilly"
+  },
+  "current_medications": [
+    {
+      "drug_name": "Clopidogrel",
+      "power": "75 MG",
+      "route": "Oral Tablet",
+      "dose": null,
+      "frequency": null,
+      "prn": null,
+      "indication": null,
+      "authoredOn": "2024-08-26",
+      "requester": "Dr. Irina Stiedemann",
+      "source_id": "MedicationRequest/2d544894-07b7-8282-d657-99387aa59f4b"
+    },
+    {
+      "drug_name": "Simvastatin",
+      "power": "20 MG",
+      "route": "Oral Tablet",
+      "dose": null,
+      "frequency": null,
+      "prn": null,
+      "indication": null,
+      "authoredOn": "2024-08-26",
+      "requester": "Dr. Irina Stiedemann",
+      "source_id": "MedicationRequest/2e1f7dc2-af59-3e54-f9e3-bbb91234c84e"
+    },
+    {
+      "drug_name": "24 HR metoprolol succinate",
+      "power": "100 MG",
+      "route": "Extended Release Oral Tablet",
+      "dose": null,
+      "frequency": null,
+      "prn": null,
+      "indication": null,
+      "authoredOn": "2024-08-26",
+      "requester": "Dr. Irina Stiedemann",
+      "source_id": "MedicationRequest/41259f0f-ff9a-469e-0646-83b2530ba9c3"
+    },
+    {
+      "drug_name": "Nitroglycerin",
+      "power": "0.4 MG/ACTUAT",
+      "route": "Mucosal Spray",
+      "dose": null,
+      "frequency": null,
+      "prn": null,
+      "indication": null,
+      "authoredOn": "2024-08-26",
+      "requester": "Dr. Irina Stiedemann",
+      "source_id": "MedicationRequest/7563b6ea-49dc-c79e-7251-1b8223b28039"
+    },
+    {
+      "drug_name": "Acetaminophen",
+      "power": "325 MG",
+      "route": "Oral Tablet [Tylenol]",
+      "dose": "1",
+      "frequency": "Every four to six hours (qualifier value)",
+      "prn": null,
+      "indication": null,
+      "authoredOn": "2024-08-19",
+      "requester": "Dr. Irina Stiedemann",
+      "source_id": "MedicationRequest/39e36d32-0d32-4176-4ee0-c106f47aaecd"
+    },
+    {
+      "drug_name": "Chlorpheniramine Maleate",
+      "power": "2 MG/ML",
+      "route": "Oral Solution",
+      "dose": "Take as needed.",
+      "frequency": "Take as needed.",
+      "prn": "PRN",
+      "indication": null,
+      "authoredOn": "1966-01-18",
+      "requester": "Dr. Josef Klein",
+      "source_id": "MedicationRequest/6b9bb1fb-2cb4-0322-2956-d359917757f1"
+    }
+  ],
+  "history": {
+    "recently_stopped": [
+      {
+        "drug_name": "cefazolin",
+        "power": "2000 MG",
+        "route": "Injection",
+        "dose": null,
+        "frequency": null,
+        "prn": null,
+        "indication": null,
+        "authoredOn": "2024-09-24",
+        "requester": "Dr. Ted Reilly",
+        "source_id": "MedicationRequest/ec8dd6ae-2aeb-437e-1beb-2132ada08438"
+      },
+      {
+        "drug_name": "",
+        "power": "1 ML",
+        "route": "heparin sodium, porcine 5000 UNT/ML Injection",
+        "dose": null,
+        "frequency": null,
+        "prn": null,
+        "indication": null,
+        "authoredOn": "2024-09-24",
+        "requester": "Dr. Ted Reilly",
+        "source_id": "MedicationRequest/0a944990-927a-2306-d122-c96b34d150aa"
+      },
+      {
+        "drug_name": "",
+        "power": "25 ML",
+        "route": "protamine sulfate (USP) 10 MG/ML Injection",
+        "dose": null,
+        "frequency": null,
+        "prn": null,
+        "indication": null,
+        "authoredOn": "2024-09-24",
+        "requester": "Dr. Ted Reilly",
+        "source_id": "MedicationRequest/19b1765b-775d-81f1-1f40-70a3ade5d89e"
+      },
+      {
+        "drug_name": "",
+        "power": "2 ML",
+        "route": "Ondansetron 2 MG/ML Injection",
+        "dose": null,
+        "frequency": null,
+        "prn": null,
+        "indication": null,
+        "authoredOn": "2024-09-24",
+        "requester": "Dr. Ted Reilly",
+        "source_id": "MedicationRequest/e8d0be07-1f2c-8418-88f9-5af94599d7b2"
+      },
+      {
+        "drug_name": "Midazolam",
+        "power": "1 MG/ML",
+        "route": "Injectable Solution",
+        "dose": null,
+        "frequency": null,
+        "prn": null,
+        "indication": null,
+        "authoredOn": "2024-09-24",
+        "requester": "Dr. Ted Reilly",
+        "source_id": "MedicationRequest/52fde001-19f7-15ee-c487-556bea8edca5"
+      },
+      {
+        "drug_name": "",
+        "power": "100 ML",
+        "route": "Propofol 10 MG/ML Injection",
+        "dose": null,
+        "frequency": null,
+        "prn": null,
+        "indication": null,
+        "authoredOn": "2024-09-24",
+        "requester": "Dr. Ted Reilly",
+        "source_id": "MedicationRequest/1bab2a65-2199-1908-a327-74b29d737c8b"
+      },
+      {
+        "drug_name": "Rocuronium bromide",
+        "power": "10 MG/ML",
+        "route": "Injectable Solution",
+        "dose": null,
+        "frequency": null,
+        "prn": null,
+        "indication": null,
+        "authoredOn": "2024-09-24",
+        "requester": "Dr. Ted Reilly",
+        "source_id": "MedicationRequest/650c8bf2-6f63-79c6-2b2c-4e05b545c559"
+      },
+      {
+        "drug_name": "sevoflurane",
+        "power": "1000 MG/ML",
+        "route": "Inhalation Solution",
+        "dose": null,
+        "frequency": null,
+        "prn": null,
+        "indication": null,
+        "authoredOn": "2024-09-24",
+        "requester": "Dr. Ted Reilly",
+        "source_id": "MedicationRequest/04450fb0-49f2-fb2e-c1e8-29140c4753aa"
+      },
+      {
+        "drug_name": "remifentanil",
+        "power": "2 MG",
+        "route": "Injection",
+        "dose": null,
+        "frequency": null,
+        "prn": null,
+        "indication": null,
+        "authoredOn": "2024-09-24",
+        "requester": "Dr. Ted Reilly",
+        "source_id": "MedicationRequest/7949ffa3-7cab-0885-f046-b32aea8cefee"
+      }
+    ]
+  },
+  "alerts": {
+    "allergies": [
+      {
+        "substance": "Animal dander (substance)",
+        "reaction": "Wheal (finding); Eruption of skin (disorder); Rhinoconjunctivitis (disorder)",
+        "severity": "moderate",
+        "source_id": "AllergyIntolerance/72777415-51e3-bfd8-4234-37ed40874f0a",
+        "criticality": "low"
+      },
+      {
+        "substance": "Allergic disposition (finding)",
+        "reaction": null,
+        "severity": null,
+        "source_id": "AllergyIntolerance/d279735c-ded1-eaa3-28ae-f79d9b8121b7",
+        "criticality": "low"
+      },
+      {
+        "substance": "Cow's milk (substance)",
+        "reaction": "Wheal (finding)",
+        "severity": null,
+        "source_id": "AllergyIntolerance/51562d79-4dbb-77da-81f2-b3833769e948",
+        "criticality": "low"
+      },
+      {
+        "substance": "House dust mite (organism)",
+        "reaction": null,
+        "severity": null,
+        "source_id": "AllergyIntolerance/e8a33887-b772-932d-1b11-353f4dfc21a5",
+        "criticality": "low"
+      },
+      {
+        "substance": "Latex (substance)",
+        "reaction": null,
+        "severity": null,
+        "source_id": "AllergyIntolerance/f0471fa7-6073-a4d1-d543-7dbf9fe8873d",
+        "criticality": "low"
+      },
+      {
+        "substance": "Lisinopril",
+        "reaction": "Drug-induced hyperkalemia (disorder)",
+        "severity": null,
+        "source_id": "AllergyIntolerance/219632fa-d3d3-3741-31fb-b6880d88d19f",
+        "criticality": "low"
+      },
+      {
+        "substance": "Mold (organism)",
+        "reaction": null,
+        "severity": null,
+        "source_id": "AllergyIntolerance/8c880257-fd40-5ff6-4ab8-e86cc5805d4b",
+        "criticality": "low"
+      },
+      {
+        "substance": "Peanut (substance)",
+        "reaction": "Eruption of skin (disorder); Finding of vomiting (finding); Wheezing (finding)",
+        "severity": null,
+        "source_id": "AllergyIntolerance/df3c6b15-08a2-5411-5d51-5a3b8f2abca5",
+        "criticality": "low"
+      }
+    ]
+  },
+  "monitoring": [
+    {
+      "med_source_id": "MedicationRequest/2e1f7dc2-af59-3e54-f9e3-bbb91234c84e",
+      "med_label": "Simvastatin 20 MG (Oral Tablet)",
+      "rule": "Statin \u2192 ALT/AST",
+      "lab_name": "ALT (Alanine aminotransferase)",
+      "lab_loinc": "1742-6",
+      "last_value": "32.192 U/L",
+      "last_date": "2024-09-28",
+      "interval_days": 365,
+      "due_date": "2025-09-28",
+      "status": "ok",
+      "source_id": "Observation/3edd4c6c-583f-891f-188c-b47756721507"
+    }
+  ],
+  "conditions": [
+    {
+      "display": "Abnormal findings diagnostic imaging heart+coronary circulat (finding)",
+      "code": "274531002",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2024-09-15",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/84656318-3b98-c9bd-a636-a8b5c21e1ee4"
+    },
+    {
+      "display": "Anemia (disorder)",
+      "code": "271737000",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2017-07-10",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/0e02209a-43ed-8f29-641c-f3fce4542144"
+    },
+    {
+      "display": "Chronic low back pain (finding)",
+      "code": "278860009",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2014-02-05",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/4dd26432-8a93-9f56-6c60-064f1f1f05a7"
+    },
+    {
+      "display": "Chronic neck pain (finding)",
+      "code": "1121000119107",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2014-02-05",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/7ffd3782-2852-8770-8ca6-3cb9803df976"
+    },
+    {
+      "display": "Chronic pain (finding)",
+      "code": "82423001",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2014-02-05",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/f0f70dd4-7653-8d0a-a7c2-048c61ec906a"
+    },
+    {
+      "display": "Full-time employment (finding)",
+      "code": "160903007",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2021-08-02",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/47d55b40-473f-e696-8108-fb33d08d5356"
+    },
+    {
+      "display": "History of coronary artery bypass grafting (situation)",
+      "code": "399261000",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2024-09-24",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/94bf6a79-35da-c315-eb65-d741028bdf7b"
+    },
+    {
+      "display": "Ischemic heart disease (disorder)",
+      "code": "414545008",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2024-08-19",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/e7e92872-58f5-271f-08de-1d2cbca79dc2"
+    },
+    {
+      "display": "Loss of teeth (disorder)",
+      "code": "37320007",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2014-07-14",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/d71f6221-8056-cc5a-f271-750fdeb1d54a"
+    },
+    {
+      "display": "Only received primary school education (finding)",
+      "code": "224295006",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "1981-08-10",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/d5112206-2614-982b-f599-0697b5e3ed14"
+    },
+    {
+      "display": "Past pregnancy history of miscarriage (situation)",
+      "code": "161744009",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "1987-01-31",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/3f8e4c72-2ecb-d79d-40b9-b0329d8b15ff"
+    },
+    {
+      "display": "Prediabetes (finding)",
+      "code": "714628002",
+      "system": "http://snomed.info/sct",
+      "clinicalStatus": "active",
+      "onset": "2017-07-10",
+      "onset_note": null,
+      "abatement": null,
+      "abatement_note": null,
+      "source_id": "Condition/d0a9771e-8548-5c9c-338d-c8ed3ea94f85"
+    }
+  ],
+  "meta": {
+    "generated_at": "2025-08-12",
+    "notes": []
+  }
+}

@@ -116,3 +116,46 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+/* Glassmorphism card style */
+/* ----------------------------------------------------------
+   Custom UI Utilities for Clinexus (Glass, Cards, Features)
+---------------------------------------------------------- */
+@layer components {
+
+  .glass-card {
+    @apply bg-white/60 backdrop-blur-xl border border-white/30 shadow-lg rounded-2xl transition;
+  }
+
+  .soft-card {
+    @apply bg-white/80 backdrop-blur-lg border border-gray-200 shadow-md rounded-xl;
+  }
+
+  .feature-card {
+    @apply p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-100/60
+           hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer border border-indigo-200/40;
+  }
+
+  .feature-icon-box {
+    @apply p-4 rounded-xl bg-primary/20 text-primary shadow-inner flex items-center justify-center;
+  }
+
+  .feature-title {
+    @apply text-xl font-semibold text-gray-800;
+  }
+
+  .feature-desc {
+    @apply text-sm text-gray-600 mt-1;
+  }
+
+  .navbar-rounded {
+    @apply bg-white/80 backdrop-blur-2xl shadow-lg border border-white/40 rounded-2xl mx-auto px-6 py-3;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold text-gray-800 tracking-tight;
+  }
+
+  .sub-text {
+    @apply text-muted-foreground text-sm;
+  }
+}
