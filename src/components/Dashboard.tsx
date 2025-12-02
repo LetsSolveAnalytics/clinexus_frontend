@@ -11,10 +11,12 @@ import {
 } from "@/components/ui/command";
 import { ChevronRight, FileText, Pill, Users } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import Appointments from "./Appointments";
 import MedicationSummary from "./MedicationSummary";
 import PatientDetails from "./PatientDetails";
 import ReferralGeneration from "./ReferralGeneration";
 import VisitSummary from "./VisitSummary";
+
 
 type PatientItem = {
   patient_id: string;
@@ -60,7 +62,7 @@ const Dashboard = () => {
     { id: "pateint-details", title: "Patient Details", description: "View patient profile & vitals", icon: FileText },
     { id: "visit-notes", title: "Visit Note Summary", description: "Visit summary insights", icon: FileText },
     { id: "medication", title: "Medication Summary", description: "Review & manage meds", icon: Pill },
-  ];
+    { id: "appointments",title: "Appointments",description: "View, schedule and manage patient appointments",icon: FileText},];
 
   const handleFeatureClick = (id: string) => setActiveFeature(id);
 
@@ -95,6 +97,10 @@ const Dashboard = () => {
         </div>
       </div>
     );
+    if (activeFeature === "appointments" && selectedItemData) {
+  return <Appointments patient={selectedItemData} onBack={() => setActiveFeature("")} />
+}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e0e7ff] p-6">
