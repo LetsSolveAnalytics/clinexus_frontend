@@ -2,6 +2,9 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+
 
 /* vitals */
 interface VitalProps { label: string; value: string }
@@ -30,6 +33,7 @@ const Alert = ({ type, text }: AlertProps) => (
   </div>
 );
 
+
 /* tab */
 interface TabProps { id: string; label: string }
 const Tab = ({ id, label }: TabProps) => (
@@ -45,13 +49,30 @@ const Grid2 = ({ children }: GridProps) => (
 );
 
 /* main */
-interface PatientData { name: string }
-interface Props { patient: PatientData | null; onBack: () => void }
 
-const PatientDetails = ({ patient, onBack }: Props) => {
+const PatientDetails = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
 
+  const [patient, setPatient] = useState<any>(null);
   const [dragging, setDragging] = useState(false);
   const [aiWidth, setAiWidth] = useState(48);
+  const [recording, setRecording] = useState(false);
+const [notes, setNotes] = useState<string | null>(null);
+
+
+  // 🔥 Add this effect EXACTLY here
+  useEffect(() => {
+    const load = async () => {
+      const res = await fetch("/datafold/data1.json");
+      const data = await res.json();
+      const found = data.find((p: any) => p.patient_id === id);
+      setPatient(found);
+    };
+
+    load();
+  }, [id]);
+
 
   /* drag start */
   const startDrag = (e: React.MouseEvent) => {
@@ -88,14 +109,16 @@ const PatientDetails = ({ patient, onBack }: Props) => {
 
   const hideRight = aiWidth > 56;
 
-  if (!patient) return <div className="p-10 text-center text-lg">No patient selected.</div>;
+  if (!patient) return <div className="p-10 text-center text-lg">Loading patient...</div>;
+
 
   return (
     <div className="min-h-screen bg-[#f7faff] p-8">
 
       {/* back */}
       <div className="mb-6 flex items-center gap-3">
-        <button onClick={onBack} className="text-primary text-sm hover:underline flex gap-1">
+      <button onClick={() => navigate("/patient-hub")} className="text-primary text-sm hover:underline flex gap-1">
+
           <ArrowLeft size={16}/> Back
         </button>
         <span className="text-sm text-muted-foreground">/ Patient Details</span>
@@ -136,12 +159,50 @@ const PatientDetails = ({ patient, onBack }: Props) => {
               <Summary label="Medication" text="Lisinopril 10mg daily"/>
               <Alert type="error" text="Ibuprofen conflict"/>
               <Alert type="success" text="Vaccination OK"/>
+          {notes && (
+  <div className="mt-4">
+    <div className="bg-[#e8f0ff] text-[#1a2b5a] p-3 rounded-xl text-sm border border-[#bdd3ff] w-fit max-w-xl">
+      <b>You:</b> {notes}
+    </div>
+  </div>
+)}
+
+
             </div>
 
             <div className="w-full flex justify-center mt-6 mb-2">
-              <button className="bg-[#1D5BFF] hover:bg-[#1447C8] text-white py-3 px-10 rounded-lg font-semibold">
-                Start Recording
-              </button>
+    <button
+  onClick={() => {
+    if (!recording) {
+      setRecording(true);
+      setNotes(null);
+
+      const dictationSamples = [
+          "Patient reports intermittent dizziness and mild headache over the last few days. Please assess potential causes and whether further testing is recommended.",
+  "The patient mentioned feeling unusually fatigued this week with no changes in sleep pattern. Evaluate possible explanations.",
+  "Patient states occasional chest pressure yesterday but denies shortness of breath. Analyze the likelihood of cardiac involvement.",
+  "Patient's blood pressure has been fluctuating for the past week. Provide insight into whether this trend is concerning.",
+  "Patient complains of morning headaches that improve through the day. Suggest potential differentials.",
+  "The patient notes increased anxiety and slight palpitations recently. Determine if this could be medication related.",
+  "Patient reports mild abdominal discomfort after meals with no nausea. Suggest likely causes.",
+  "The patient says their dizziness worsens when standing. Check if this suggests orthostatic hypotension.",
+  "Patient describes general weakness but denies fever or infection symptoms. Provide possible explanations.",
+  "Patient mentions worsening neck stiffness in the mornings. Assess possible musculoskeletal causes."
+];
+
+      setTimeout(() => {
+        setRecording(false);
+        setNotes(dictationSamples[Math.floor(Math.random() * dictationSamples.length)]);
+      }, 3000);
+    }
+  }}
+  className={`py-3 px-10 rounded-lg font-semibold text-white transition-all 
+    ${recording ? "bg-red-600 animate-pulse" : "bg-[#1D5BFF] hover:bg-[#1447C8]"}
+  `}
+>
+  {recording ? "Recording..." : "Start Recording"}
+</button>
+
             </div>
 
             {/* two cards */}

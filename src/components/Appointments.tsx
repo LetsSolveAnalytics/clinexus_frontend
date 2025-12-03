@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
-      AlertTriangle,
-      ArrowLeft,
-      CalendarDays,
-      ClipboardCheck,
-      Clock3,
-      Filter,
-      Plus,
-      Search,
+  AlertTriangle,
+  ArrowLeft,
+  CalendarDays,
+  ClipboardCheck,
+  Clock3,
+  Filter,
+  Plus,
+  Search,
 } from "lucide-react";
 import { useState } from "react";
+
 
 interface Props {
   patient: any;
@@ -38,6 +39,12 @@ const Appointments = ({ patient, onBack }: Props) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("day");
   const [chip, setChip] = useState<ChipFilter>("all");
+const [newOpen, setNewOpen] = useState(false);
+const [form, setForm] = useState({
+  name: "",
+  type: "",
+  time: "",
+});
 
   const appointments: Appointment[] = [
   {
@@ -137,12 +144,14 @@ const Appointments = ({ patient, onBack }: Props) => {
             <Filter size={16} />
             Filter
           </Button>
-          <Button
+         <Button
+            onClick={() => setNewOpen(true)}
             className="h-9 px-4 rounded-lg bg-[#1D5BFF] hover:bg-[#1447C8] text-sm text-white flex items-center gap-2"
           >
             <Plus size={16} />
             New Appointment
           </Button>
+
         </div>
       </div>
 
@@ -337,6 +346,80 @@ const Appointments = ({ patient, onBack }: Props) => {
       </div>
     </div>
   )}
+  {newOpen && (
+  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md border">
+
+      <h2 className="text-xl font-bold mb-4">New Appointment</h2>
+
+      <div className="space-y-4">
+        <div>
+          <label className="text-sm font-medium">Patient Name</label>
+          <input
+            className="w-full mt-1 p-2 border rounded-lg"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Appointment Type</label>
+          <input
+            className="w-full mt-1 p-2 border rounded-lg"
+            value={form.type}
+            onChange={(e) => setForm({ ...form, type: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Time</label>
+          <input
+            type="time"
+            className="w-full mt-1 p-2 border rounded-lg"
+            value={form.time}
+            onChange={(e) => setForm({ ...form, time: e.target.value })}
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-3 mt-6">
+        <button
+          className="px-4 py-2 rounded-lg bg-gray-200"
+          onClick={() => setNewOpen(false)}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="px-4 py-2 rounded-lg bg-[#1D5BFF] text-white"
+          onClick={() => {
+            const newApt = {
+              time: form.time || "10:00 AM",
+              duration: "30 min",
+              name: form.name || "Unnamed",
+              type: form.type || "General Visit",
+              lastVisit: "New patient",
+              age: "—",
+              gender: "—",
+              bp: "—",
+              hr: "—",
+              spo2: "—",
+              status: "Upcoming",
+            };
+
+            appointments.unshift(newApt);
+            setNewOpen(false);
+            setForm({ name: "", type: "", time: "" });
+          }}
+        >
+          Save
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
+
 </div>
 
       </div>

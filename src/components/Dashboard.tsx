@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/command";
 import { ChevronRight, FileText, Pill, Users } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import Appointments from "./Appointments";
 import MedicationSummary from "./MedicationSummary";
 import PatientDetails from "./PatientDetails";
 import ReferralGeneration from "./ReferralGeneration";
@@ -59,18 +58,13 @@ const Dashboard = () => {
 
   const features = [
     { id: "referral", title: "Referral Generation", description: "Generate and manage referrals", icon: Users },
-    { id: "pateint-details", title: "Patient Details", description: "View patient profile & vitals", icon: FileText },
     { id: "visit-notes", title: "Visit Note Summary", description: "Visit summary insights", icon: FileText },
-    { id: "medication", title: "Medication Summary", description: "Review & manage meds", icon: Pill },
-    { id: "appointments",title: "Appointments",description: "View, schedule and manage patient appointments",icon: FileText},];
+    { id: "medication", title: "Medication Summary", description: "Review & manage meds", icon: Pill },];
 
   const handleFeatureClick = (id: string) => setActiveFeature(id);
 
   if (activeFeature === "referral" && selectedItemData)
     return <ReferralGeneration patient={selectedItemData} onBack={() => setActiveFeature("")} />;
-
-  if (activeFeature === "pateint-details" && selectedItemData)
-    return <PatientDetails patient={selectedItemData} onBack={() => setActiveFeature("")} />;
 
   if (activeFeature === "visit-notes" && selectedItemData)
     return (
@@ -97,9 +91,6 @@ const Dashboard = () => {
         </div>
       </div>
     );
-    if (activeFeature === "appointments" && selectedItemData) {
-  return <Appointments patient={selectedItemData} onBack={() => setActiveFeature("")} />
-}
 
 
   return (
