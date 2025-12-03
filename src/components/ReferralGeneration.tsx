@@ -40,6 +40,10 @@ const ReferralGeneration = ({ patient, onBack }: ReferralProps) => {
   const [results, setResults] = useState(patient.results || "");
   const [shareOpen, setShareOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [verifyingPopup, setVerifyingPopup] = useState(false);
+const [readyToSendPopup, setReadyToSendPopup] = useState(false);
+const [pendingDoctor, setPendingDoctor] = useState("");
+
 
 
   const [preview, setPreview] = useState("");
@@ -101,9 +105,48 @@ The Johns Hopkins Hospital`
     doc.save(`Referral_${patient.name}.pdf`);
   };
 
+
+  
   return (
    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e0e7ff] p-6">
 
+{/* 🔥 Popup: Verifying */}
+{verifyingPopup && (
+  <div className="fixed inset-0 bg-black/40 z-[999] flex items-center justify-center">
+    <div className="bg-white p-6 rounded-xl shadow-xl text-center w-[320px]">
+      <h2 className="text-lg font-semibold mb-3">Verifying the documents…</h2>
+      <p className="text-sm text-gray-500">Please wait while we check the reports.</p>
+    </div>
+  </div>
+)}
+
+{/* 🔥 Popup: Ready to Send */}
+{readyToSendPopup && (
+  <div className="fixed inset-0 bg-black/40 z-[999] flex items-center justify-center">
+    <div className="bg-white p-6 rounded-xl shadow-xl text-center w-[350px]">
+      <h2 className="text-lg font-semibold mb-3">Documents are ready to send</h2>
+      <p className="text-sm text-gray-500 mb-4">Would you like to send the referral now?</p>
+
+      <div className="flex justify-center gap-3">
+        <Button
+          variant="secondary"
+          onClick={() => setReadyToSendPopup(false)}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          onClick={() => {
+            setReadyToSendPopup(false);
+            setSuccessMessage(`Referral shared with ${pendingDoctor}`);
+          }}
+        >
+          Send
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
 
        <div className="max-w-7xl mx-auto">
         {successMessage && (
@@ -247,8 +290,18 @@ The Johns Hopkins Hospital`
      {shareOpen && (
   <ShareReferralModal 
       onClose={() => setShareOpen(false)}
-      onSuccess={(doctor) => setSuccessMessage(`Referral shared with ${doctor}`)}
-      
+      onSuccess={(doctor) => {
+  setPendingDoctor(doctor);      // store selected doctor
+  setShareOpen(false);           // close modal
+  setVerifyingPopup(true);       // show "verifying" popup
+
+  // Wait 10 seconds → show next popup
+  setTimeout(() => {
+    setVerifyingPopup(false);
+    setReadyToSendPopup(true);   // show "ready to send"
+  }, 5000);
+}}
+
   />
   
 )}
@@ -275,6 +328,7 @@ function ShareReferralModal({ onClose, onSuccess })
   const filteredDoctors = doctors.filter(d =>
     d.toLowerCase().includes(search.toLowerCase())
   );
+  
   // ⬆⬆ END OF NEW BLOCK ⬆⬆
 
   return (
@@ -306,7 +360,7 @@ function ShareReferralModal({ onClose, onSuccess })
             selectedDoctor === doctor ? "bg-blue-100 font-medium" : ""
           }`}
         >
-          {doctor}
+          {doctor}sh
         </div>
       ))
     )}
@@ -323,7 +377,7 @@ function ShareReferralModal({ onClose, onSuccess })
           onClose();                   // <-- close modal
 }}
         >
-          Share
+          verify
         </Button>
       </div>
     </div>
